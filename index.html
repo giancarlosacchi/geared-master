@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- build: geared-v3 -->
+<!-- build: geared-v4 -->
 <script type="application/json" id="cowork-artifact-meta">
 {
   "name": "Ls Geared Master",
@@ -4997,7 +4997,7 @@ const KEY = 'lspmx_v4';
 // Ordine aree ATL TNG — IMPERATIVO da Giancarlo
 const ATL_TNG_AREAS = ['ECSA', 'NCSA', 'PG', 'RSEA', 'PG / RSEA', 'WCI', 'ECI', 'SEASIA', 'UKC', 'CONT', 'WMED', 'USG', 'USEC / ECCA', 'EMED / BSEA'];
 // Ordine aree PAC TNG — IMPERATIVO da Giancarlo
-const PAC_TNG_AREAS = ['NCHINA', 'SCHINA', 'SEASIA'];
+const PAC_TNG_AREAS = ['NCHINA', 'SCHINA', 'SEASIA', 'WCSA', 'WCCA', 'USWC'];   // GEARED 8 ott: costa Pacifico delle Americhe (chat WCSA / WCCA / USWC)
 // Ordine sezioni ATL CGO — IMPERATIVO da Giancarlo
 const ATL_CGO_SECTIONS = [
   'ECSA FH', 'ECSA TA',
@@ -11148,7 +11148,7 @@ if (AUTO_INBOX_FRAME) {
 // v72: una scheda lasciata aperta per giorni resta sulla versione vecchia (regole Inbox diverse). Ogni 5 min controlla il marker
 // di build: se ne e' uscita una nuova, ricarica da sola quando non si sta scrivendo (altrimenti avvisa).
 (function buildWatch() {
-  const cur = 'BUILD_MARKER: geared-v3'.slice(14);   // aggiornare insieme al commento <!-- build: … --> a ogni deploy
+  const cur = 'BUILD_MARKER: geared-v4'.slice(14);   // aggiornare insieme al commento <!-- build: … --> a ogni deploy
   let warned = false;
   const check = async () => {
     try {
