@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- build: geared-v1 -->
+<!-- build: geared-v2 -->
 <script type="application/json" id="cowork-artifact-meta">
 {
   "name": "Ls Geared Master",
@@ -2772,7 +2772,7 @@ body:not(.logged-in) .app { visibility: hidden; }
 <div class="login-overlay" id="login-overlay">
   <div class="login-box">
     <img src="./logo.png" alt="Lightship logo" />
-    <h1>PMX MASTER LIST</h1>
+    <h1>GEARED MASTER LIST</h1>
     <p>Sign in with your Lightship email and password.</p>
     <input type="email" id="login-email" class="login-input" placeholder="name@lightshipchartering.com" autocomplete="email" />
     <input type="password" id="login-password" class="login-input" placeholder="Password" autocomplete="current-password" />
@@ -3727,7 +3727,7 @@ function applyRtRundown(payload) {
 
 function renderUserChip(user) {
   // Niente più chip nel topbar: mostriamo solo lo username (parte prima di @)
-  // sotto al titolo "PMX MASTER LIST" nel brand della sidebar.
+  // sotto al titolo "GEARED MASTER LIST" nel brand della sidebar.
   // Read-only: niente bottone di logout (evita clic accidentali che sprecano
   // un'autenticazione). Per loggare come utente diverso, da DevTools:
   //   window.sb.auth.signOut().then(() => location.reload())
@@ -11148,7 +11148,7 @@ if (AUTO_INBOX_FRAME) {
 // v72: una scheda lasciata aperta per giorni resta sulla versione vecchia (regole Inbox diverse). Ogni 5 min controlla il marker
 // di build: se ne e' uscita una nuova, ricarica da sola quando non si sta scrivendo (altrimenti avvisa).
 (function buildWatch() {
-  const cur = 'BUILD_MARKER: geared-v1'.slice(14);   // aggiornare insieme al commento <!-- build: … --> a ogni deploy
+  const cur = 'BUILD_MARKER: geared-v2'.slice(14);   // aggiornare insieme al commento <!-- build: … --> a ogni deploy
   let warned = false;
   const check = async () => {
     try {
