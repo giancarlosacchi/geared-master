@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- build: geared-v2 -->
+<!-- build: geared-v3 -->
 <script type="application/json" id="cowork-artifact-meta">
 {
   "name": "Ls Geared Master",
@@ -11117,7 +11117,7 @@ if (AUTO_INBOX_FRAME) {
   async function autoInboxTick() {
     if (window.__aiBusy) return;
     if (typeof CURRENT_USER_ROLE === 'undefined' || CURRENT_USER_ROLE !== 'admin') return;
-    if (typeof DATA === 'undefined' || !DATA || !(DATA.vessels || []).length) return;   // liste non ancora caricate: findV non troverebbe nulla → doppioni
+    if (typeof DATA === 'undefined' || !DATA || !window._cloudSyncActive || window._cloudLoadFailed) return;   // liste non ancora caricate dal cloud: findV non troverebbe nulla → doppioni. GEARED (8 ott): NON "lista vuota" — un DB nuovo e' vuoto e l'approvatore non partirebbe mai
     window.__aiBusy = true;
     try {
       for (const mode of ['vsl', 'cgo']) {
@@ -11148,7 +11148,7 @@ if (AUTO_INBOX_FRAME) {
 // v72: una scheda lasciata aperta per giorni resta sulla versione vecchia (regole Inbox diverse). Ogni 5 min controlla il marker
 // di build: se ne e' uscita una nuova, ricarica da sola quando non si sta scrivendo (altrimenti avvisa).
 (function buildWatch() {
-  const cur = 'BUILD_MARKER: geared-v2'.slice(14);   // aggiornare insieme al commento <!-- build: … --> a ogni deploy
+  const cur = 'BUILD_MARKER: geared-v3'.slice(14);   // aggiornare insieme al commento <!-- build: … --> a ogni deploy
   let warned = false;
   const check = async () => {
     try {
