@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- build: geared-v4 -->
+<!-- build: geared-v5 -->
 <script type="application/json" id="cowork-artifact-meta">
 {
   "name": "Ls Geared Master",
@@ -2095,6 +2095,11 @@ tr.status-subs .status-menu .opt { text-decoration: none; }
 .dwt-popup .dwt-fill { position: absolute; top: 11px; height: 4px; border-radius: 2px; background: var(--gold, #c9a227); }
 .dwt-popup .dwt-foot { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; font-size: 11px; color: var(--text-mute); }
 .dwt-popup .dwt-foot button { font-size: 11px; padding: 2px 8px; }
+/* geared-v5 (12 ott 2026, Giancarlo): due tasti sopra la barra DWT — Handy 20-46k, Supra/Ultra 47-67k; barra 15k-67k */
+.dwt-popup .dwt-quick { display: flex; gap: 6px; margin-bottom: 10px; }
+.dwt-popup .dwt-quick button { flex: 1; font-size: 11px; font-weight: 700; padding: 4px 6px; border-radius: 6px; border: 1px solid var(--line); background: transparent; color: var(--text); cursor: pointer; }
+.dwt-popup .dwt-quick button:hover { border-color: var(--gold, #c9a227); }
+.dwt-popup .dwt-quick button.on { background: var(--gold, #c9a227); color: #111; border-color: var(--gold, #c9a227); }
 
 .dr-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; padding: 0 4px; }
 .dr-head-title { font-weight: 600; font-size: 13px; }
@@ -4219,10 +4224,11 @@ function createDateRangePicker(opts) {
 // ===== INLINE RANGE PICKER (per filtri colonna nei thead) =====
 // Apre un calendar popup ancorato a `anchor`. 1° click = from, 2° click = to.
 // Singolo giorno: clicca Chiudi dopo il primo click.
-// ===== DWT RANGE SLIDER (filtro DWT di tutte le pagine): barra 70k-100k, scrive "75-85" nel filtro =====
+// ===== DWT RANGE SLIDER (filtro DWT di tutte le pagine): GEARED barra 15k-67k + tasti Handy (20-46) / Supra-Ultra (47-67) (geared-v5, 12 ott 2026), scrive "20-46" nel filtro =====
 function openDwtRange(anchor) {
   document.querySelectorAll('.dr-popup.filter-popup').forEach(p => p.remove());
-  const MIN = 70, MAX = 100;
+  const MIN = 15, MAX = 67;
+  const QUICK = [['Handy', 20, 46], ['Supra / Ultra', 47, 67]];
   const scope = anchor.closest('[id]');
   const scopeSel = scope ? '#' + scope.id : null;
   const findAnchor = () => (scopeSel && document.querySelector(scopeSel + ' th.th-filter input[data-col="dwt_blt"]')) || anchor;
@@ -4231,7 +4237,8 @@ function openDwtRange(anchor) {
   if (m) { lo = Math.max(MIN, Math.min(MAX, +m[1])); hi = Math.max(MIN, Math.min(MAX, +m[2])); }
   const popup = document.createElement('div');
   popup.className = 'dr-popup filter-popup dwt-popup open';
-  popup.innerHTML = `<div class="dwt-vals"><span class="dwt-lo"></span><span class="dwt-hi"></span></div>
+  popup.innerHTML = `<div class="dwt-quick">${QUICK.map(([n, a, b]) => `<button type="button" data-lo="${a}" data-hi="${b}">${n}<br><span style="font-weight:400;opacity:.75">${a}-${b}k</span></button>`).join('')}</div>
+    <div class="dwt-vals"><span class="dwt-lo"></span><span class="dwt-hi"></span></div>
     <div class="dwt-track"><div class="dwt-rail"></div><div class="dwt-fill"></div>
       <input type="range" class="dwt-a" min="${MIN}" max="${MAX}" step="1"><input type="range" class="dwt-b" min="${MIN}" max="${MAX}" step="1"></div>
     <div class="dwt-foot"><span>DWT range (k)</span><button type="button" class="dwt-clear">Clear</button></div>`;
@@ -4240,7 +4247,8 @@ function openDwtRange(anchor) {
   const position = () => { const r = findAnchor().getBoundingClientRect(); popup.style.top = (r.bottom + 6) + 'px'; popup.style.left = Math.min(r.left, window.innerWidth - 260) + 'px'; };
   const paint = () => {
     a.value = lo; b.value = hi;
-    popup.querySelector('.dwt-lo').textContent = lo + 'k'; popup.querySelector('.dwt-hi').textContent = (hi >= MAX ? MAX + 'k+' : hi + 'k');
+    popup.querySelector('.dwt-lo').textContent = lo + 'k'; popup.querySelector('.dwt-hi').textContent = hi + 'k';
+    popup.querySelectorAll('.dwt-quick button').forEach(q => q.classList.toggle('on', +q.dataset.lo === lo && +q.dataset.hi === hi));
     const p1 = (lo - MIN) / (MAX - MIN) * 100, p2 = (hi - MIN) / (MAX - MIN) * 100;
     fill.style.left = `calc(8px + (100% - 16px) * ${p1 / 100})`; fill.style.width = `calc((100% - 16px) * ${(p2 - p1) / 100})`;
   };
@@ -4256,6 +4264,7 @@ function openDwtRange(anchor) {
   a.oninput = () => { lo = Math.min(+a.value, hi); paint(); apply(); };
   b.oninput = () => { hi = Math.max(+b.value, lo); paint(); apply(); };
   popup.querySelector('.dwt-clear').onclick = () => { lo = MIN; hi = MAX; paint(); apply(); };
+  popup.querySelectorAll('.dwt-quick button').forEach(q => { q.onclick = () => { const a = +q.dataset.lo, b = +q.dataset.hi; if (lo === a && hi === b) { lo = MIN; hi = MAX; } else { lo = a; hi = b; } paint(); apply(); }; });
   const close = () => { popup.remove(); document.removeEventListener('mousedown', onOutside, true); window.removeEventListener('resize', close); };
   const onOutside = (e) => { if (!popup.contains(e.target) && !(e.target.matches && e.target.matches('th.th-filter input[data-col="dwt_blt"]'))) close(); };
   setTimeout(() => document.addEventListener('mousedown', onOutside, true), 0);
@@ -11148,7 +11157,7 @@ if (AUTO_INBOX_FRAME) {
 // v72: una scheda lasciata aperta per giorni resta sulla versione vecchia (regole Inbox diverse). Ogni 5 min controlla il marker
 // di build: se ne e' uscita una nuova, ricarica da sola quando non si sta scrivendo (altrimenti avvisa).
 (function buildWatch() {
-  const cur = 'BUILD_MARKER: geared-v4'.slice(14);   // aggiornare insieme al commento <!-- build: … --> a ogni deploy
+  const cur = 'BUILD_MARKER: geared-v5'.slice(14);   // aggiornare insieme al commento <!-- build: … --> a ogni deploy
   let warned = false;
   const check = async () => {
     try {
