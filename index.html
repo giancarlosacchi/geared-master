@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- build: geared-v5 -->
+<!-- build: geared-v6 -->
 <script type="application/json" id="cowork-artifact-meta">
 {
   "name": "Ls Geared Master",
@@ -2830,11 +2830,7 @@ body:not(.logged-in) .app { visibility: hidden; }
   <div class="sb-block sb-tools">
     <div class="nav-section">Tools</div>
     <nav class="nav">
-      <a data-route="ecsa-list"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3v18"/></svg><span class="nav-label">ECSA List</span></a>
-      <a data-route="bsea"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg><span class="nav-label">BSEA</span></a>
-      <a data-route="ecsa-count"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="m6 15 4-5 4 3 5-7"/></svg><span class="nav-label">ECSA Count</span></a>
       <a data-route="inbox"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg><span class="nav-label">Inbox</span></a>
-      <a data-route="calc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 7h8M8 11h2M14 11h2M8 15h2M14 15h2"/></svg><span class="nav-label">Calc DOP/APS</span></a>
       <a data-route="distances"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg><span class="nav-label">Distances</span></a>
       <a data-route="vsl-descr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span class="nav-label">Vsl Descr</span></a>
       <a data-route="personal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="7" r="4"/><path d="M5 21v-1a7 7 0 0 1 14 0v1"/></svg><span class="nav-label">Personal</span></a>
@@ -5622,7 +5618,8 @@ const PAGES = {
 let _lastRoute = null;
 function setRoute() {
   const hash = location.hash.replace(/^#\//, '') || 'atl-tng';
-  const route = hash.split('?')[0];
+  let route = hash.split('?')[0];
+  if (['ecsa-list', 'bsea', 'ecsa-count', 'calc'].includes(route)) route = 'atl-tng';   // geared-v6 (12 ott 2026, Giancarlo): ECSA List, BSEA, ECSA Count e Calc DOP/APS tolti dal menu geared
   const sameRoute = (route === _lastRoute);
   // Salva posizioni di scroll PRIMA di rerender (solo se stessa route → CRUD/edit)
   let _scrollY = 0;
@@ -11157,7 +11154,7 @@ if (AUTO_INBOX_FRAME) {
 // v72: una scheda lasciata aperta per giorni resta sulla versione vecchia (regole Inbox diverse). Ogni 5 min controlla il marker
 // di build: se ne e' uscita una nuova, ricarica da sola quando non si sta scrivendo (altrimenti avvisa).
 (function buildWatch() {
-  const cur = 'BUILD_MARKER: geared-v5'.slice(14);   // aggiornare insieme al commento <!-- build: … --> a ogni deploy
+  const cur = 'BUILD_MARKER: geared-v6'.slice(14);   // aggiornare insieme al commento <!-- build: … --> a ogni deploy
   let warned = false;
   const check = async () => {
     try {
